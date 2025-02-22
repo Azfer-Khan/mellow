@@ -3,9 +3,17 @@ import bodyParser from 'body-parser';
 import axios from 'axios';
 import sqlite3 from 'sqlite3';
 import { open, Database } from 'sqlite'; // Ensure you installed "sqlite" package
+import cors from 'cors';
 
 const app = express();
 const port = 3000;
+
+// Configure CORS
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'], // Allow both React dev server and Electron
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 
 // Middleware to parse JSON bodies
 app.use(bodyParser.json());
