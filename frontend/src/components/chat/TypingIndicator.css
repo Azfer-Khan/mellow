@@ -1,0 +1,7 @@
+/* src/components/chat/TypingIndicator.css */
+.typing-indicator {
+    font-style: italic;
+    color: #888;
+    margin: 10px;
+  }
+  

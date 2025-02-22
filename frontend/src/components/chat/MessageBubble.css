@@ -1,0 +1,31 @@
+/* src/components/chat/MessageBubble.css */
+.message-bubble {
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 70%;
+    word-wrap: break-word;
+  }
+  
+  .message-bubble.user {
+    background-color: #d1e7dd;
+    align-self: flex-end;
+    text-align: right;
+  }
+  
+  .message-bubble.ai {
+    background-color: #f8d7da;
+    align-self: flex-start;
+    text-align: left;
+  }
+  
+  .bubble-text {
+    margin: 0;
+  }
+  
+  .bubble-timestamp {
+    font-size: 0.75rem;
+    color: #555;
+    margin-top: 4px;
+  }
+  
