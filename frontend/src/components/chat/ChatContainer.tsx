@@ -45,7 +45,7 @@ const ChatContainer: React.FC = () => {
   return (
     <div className="chat-container">
       <div className="chat-header">
-        <h2>Chat with MellowMind AI</h2>
+        <h2>MellowMind</h2>
       </div>
       <MessageList messages={messages} />
       <TypingIndicator isTyping={isTyping} />
