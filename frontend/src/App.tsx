@@ -1,7 +1,7 @@
 // src/App.tsx
 import React, { useEffect } from 'react';
 import ChatContainer from './components/chat/ChatContainer';
-import ThemeToggle from './components/ThemeToggle';
+import ThemeToggle from './context/ThemeToggle';
 import './App.css';
 
 const App: React.FC = () => {
