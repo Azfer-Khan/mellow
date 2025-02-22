@@ -1,5 +1,6 @@
 // src/components/chat/ChatContainer.tsx
 import React, { useState } from 'react';
+import axios from 'axios';
 import MessageList from './MessageList';
 import InputArea from './InputArea';
 import TypingIndicator from './TypingIndicator';
@@ -10,26 +11,42 @@ const ChatContainer: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(false);
 
-  const sendMessage = (text: string) => {
+  const sendMessage = async (text: string) => {
     const timestamp = new Date().toLocaleTimeString();
     const userMessage: Message = { sender: 'user', text, timestamp };
-    setMessages((prev) => [...prev, userMessage]);
+    setMessages(prev => [...prev, userMessage]);
 
-    // Simulate AI response: show typing indicator and then add response
     setIsTyping(true);
-    setTimeout(() => {
+
+    try {
+      // Replace the simulated response with an API call
+      const response = await axios.post('http://localhost:3000/chat', { message: text });
+      const aiResponseText = response.data.response;
+
       const aiMessage: Message = {
         sender: 'ai',
-        text: `I'm here to listen. You said: "${text}"`,
+        text: aiResponseText,
         timestamp: new Date().toLocaleTimeString(),
       };
-      setMessages((prev) => [...prev, aiMessage]);
+      setMessages(prev => [...prev, aiMessage]);
+    } catch (error) {
+      console.error("Error calling the backend API:", error);
+      const errorMessage: Message = {
+        sender: 'ai',
+        text: "Oops, something went wrong. Please try again.",
+        timestamp: new Date().toLocaleTimeString(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
   };
 
   return (
     <div className="chat-container">
+      <div className="chat-header">
+        <h2>Chat with MellowMind AI</h2>
+      </div>
       <MessageList messages={messages} />
       <TypingIndicator isTyping={isTyping} />
       <InputArea onSend={sendMessage} />

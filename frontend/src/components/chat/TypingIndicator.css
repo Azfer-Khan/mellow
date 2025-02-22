@@ -1,7 +1,26 @@
 /* src/components/chat/TypingIndicator.css */
 .typing-indicator {
-    font-style: italic;
-    color: #888;
-    margin: 10px;
-  }
+  padding: 12px 24px;
+  color: #666;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.typing-indicator span {
+  display: flex;
+  align-items: center;
+}
+
+.typing-indicator span::after {
+  content: '...';
+  animation: typing 1.4s infinite;
+}
+
+@keyframes typing {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
   

@@ -52,12 +52,25 @@ mellow/
 ├── frontend/             # Contains the Electron app code with React components
 │   ├── public/           # Static assets (e.g., index.html, images, icons)
 │   ├── src/              # React components, styles, and Electron renderer code
+│   |   ├── components/   # React components 
+│   |   ├── styles/       # CSS styles
+│   |   ├── utils/        # Utility functions
+│   |   ├── App.tsx       # Main App component
+│   |   ├── index.tsx     # Entry point for React app
+│   |   ├── main.tsx      # Electron main process
+│   ├── package.json      # Frontend-specific dependencies and scripts
+│   ├── tsconfig.json     # TypeScript configuration
+│   ├── build/            # Production build output
 │   ├── main.js           # Electron main process file
+│   ├── preload.js        # Preload script for Node.js integration in renderer
 │   └── package.json      # Frontend-specific dependencies and scripts
 ├── backend/              # Contains server code
-│   ├── node/             # Node.js/TypeScript API and logic (e.g., Express/Fastify app)
-│   ├── python-ai/        # Python microservice for AI tasks (e.g., Flask/FastAPI app)
-│   └── package.json      # Backend-specific dependencies and scripts (if applicable)
+│   ├── node/             # Node.js/TypeScript API and logic (Express app)
+│   ├── node/src/         # Node.js/TypeScript source code
+│   ├── node/package.json # Node.js/TypeScript dependencies and scripts
+│   ├── python-ai/        # Python microservice for AI tasks (FastAPI ap   p)
+│   ├── python-ai/app.py  # Python source code
+│   └── package.json      # Backend-specific dependencies and scripts
 ├── docs/                 # Documentation, tutorials, and technical specs
 ├── tests/                # Unit and integration tests for both frontend and backend
 ├── README.md             # Overview, setup instructions, and usage details
