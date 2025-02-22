@@ -43,7 +43,14 @@ If you encounter a bug or issue, please report it using the GitHub issue tracker
 If you have an idea for a new feature, please open a feature request issue.
 
 ## Pull Request Guidelines
-
+- Submit a pull request (PR) from your branch. Follow the PULL_REQUEST_TEMPLATE.md for details.
 - Write clear commit messages.
 - Include screenshots or videos if your changes include UI changes.
 - Test your changes thoroughly. 
+
+## Code of Conduct
+This project and everyone participating in it is governed by the [Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
+
+
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
