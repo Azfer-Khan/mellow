@@ -33,6 +33,11 @@
     opacity: 0;
     margin-top: 4px;
     transition: opacity 0.2s ease;
+    text-align: right;
+  }
+
+  .message-bubble.ai .bubble-timestamp {
+    text-align: left;
   }
 
   .message-bubble:hover .bubble-timestamp {
