@@ -19,11 +19,11 @@ An AI-powered therapy chat application designed to provide compassionate support
 ### Setup Steps
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/therapy-chat-app.git
+   git clone https://github.com/Azfer-Khan/mellow.git
 
 2. **Navigate to the project directory:**
    ```bash
-   cd therapy-chat-app
+   cd mellow
 
 3. **Install dependencies:**
    ```bash
