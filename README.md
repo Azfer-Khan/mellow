@@ -41,13 +41,13 @@ An AI-powered therapy chat application designed to provide compassionate support
     pip install -r requirements.txt
     python app.py
 
-##Usage
+## Usage
 - Launch the desktop application.
 - Type your message in the chat interface.
 - The app processes your message through the AI integration module and displays an empathetic response.
 - Conversation data is stored locally in an encrypted SQLite database.
 
-##Project Structure
+## Project Structure
 mellow/
 ├── frontend/             # Contains the Electron app code with React components
 │   ├── public/           # Static assets (e.g., index.html, images, icons)
