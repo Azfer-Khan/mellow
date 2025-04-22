@@ -48,6 +48,7 @@ An AI-powered therapy chat application designed to provide compassionate support
 - Conversation data is stored locally in an encrypted SQLite database.
 
 ## Project Structure
+```
 mellow/
 ├── frontend/             # Contains the Electron app code with React components
 │   ├── public/           # Static assets (e.g., index.html, images, icons)
@@ -77,6 +78,7 @@ mellow/
 ├── CONTRIBUTING.md       # Guidelines on how to contribute to the project
 ├── CODE_OF_CONDUCT.md    # Community rules and expectations
 └── .github/             # GitHub templates and CI/CD workflow files
+```
 
 ## Community
 Join our community channels:
