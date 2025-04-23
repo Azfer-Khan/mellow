@@ -1,3 +1,13 @@
+# Assignment Submission: Mood Journal & Conversational Memory
+
+For this technical challenge, I implemented a Mood Journal feature and a conversational memory system in MellowMind. The Mood Journal allows users to log their daily moods and reflections, view recent entries, and develop self-awareness—all within a minimal, user-friendly UI. The chat system now includes short-term memory, passing the last five conversation turns to the AI microservice for more context-aware, empathetic responses.
+
+I chose these features because journaling is a proven tool for mental health, and conversational memory is essential for supportive, human-like AI interactions. Together, they make the app more engaging and helpful for users seeking comfort or self-reflection.
+
+Future extensions could include mood analytics and visualizations, secure cloud sync, deeper AI memory, emotion classification, and integration with professional support resources.
+
+---
+
 # MellowMind.ai
 
 An AI-powered therapy chat application designed to provide compassionate support for users with anxiety. This project uses a modular architecture with a Node.js/TypeScript backend, a Python microservice for AI tasks, and an Electron/React desktop frontend. It is designed to allow hotswapping of AI models and includes robust local data storage (SQLite) with future potential for RAG and knowledge graph integration.

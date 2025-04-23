@@ -19,7 +19,6 @@ const ChatContainer: React.FC = () => {
     setIsTyping(true);
 
     try {
-      // Replace the simulated response with an API call
       const response = await axios.post('http://localhost:3000/chat', { message: text });
       const aiResponseText = response.data.response;
 
@@ -46,6 +45,7 @@ const ChatContainer: React.FC = () => {
     <div className="chat-container">
       <div className="chat-header">
         <h2>MellowMind</h2>
+        <span className="chat-welcome">Welcome! How can I support you today?</span>
       </div>
       <MessageList messages={messages} />
       <TypingIndicator isTyping={isTyping} />

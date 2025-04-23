@@ -37,7 +37,47 @@ let db: any;
       timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
     )
   `);
+
+  // Create the mood_journal table if it doesn't exist
+  await db.exec(`
+    CREATE TABLE IF NOT EXISTS mood_journal (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      mood TEXT NOT NULL,
+      note TEXT,
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
 })();
+
+// POST /journal - Add a mood journal entry
+app.post('/journal', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { mood, note } = req.body;
+    if (!mood) {
+      res.status(400).json({ error: 'Mood is required.' });
+      return;
+    }
+    await db.run(
+      'INSERT INTO mood_journal (mood, note) VALUES (?, ?)',
+      [mood, note || null]
+    );
+    res.status(201).json({ message: 'Entry added.' });
+  } catch (error) {
+    console.error('Error in /journal POST:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// GET /journal - Get all mood journal entries (latest first)
+app.get('/journal', async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const entries = await db.all('SELECT * FROM mood_journal ORDER BY timestamp DESC');
+    res.json(entries);
+  } catch (error) {
+    console.error('Error in /journal GET:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
 
 // POST /chat endpoint with explicit types
 app.post('/chat', async (req: Request, res: Response): Promise<void> => {
@@ -48,8 +88,17 @@ app.post('/chat', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    // Call the Python microservice to get an AI response
-    const pythonResponse = await axios.post('http://localhost:8000/generate-response', { message });
+    // Fetch last 5 conversation turns for memory
+    const history = await db.all(
+      'SELECT user_message, ai_response FROM conversations ORDER BY id DESC LIMIT 5'
+    );
+    const reversedHistory = history.reverse(); // oldest first
+
+    // Call the Python microservice to get an AI response, passing history
+    const pythonResponse = await axios.post('http://localhost:8000/generate-response', {
+      message,
+      history: reversedHistory
+    });
     const aiResponse = pythonResponse.data.response;
 
     // Log the conversation into SQLite

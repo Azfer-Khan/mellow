@@ -8,6 +8,9 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     position: relative;
     animation: fadeIn 0.3s ease-in;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
   }
   
   .message-bubble.user {
@@ -22,6 +25,13 @@
     color: var(--secondary-text, #1c1e21);
     align-self: flex-start;
     border-bottom-left-radius: 4px;
+  }
+  
+  .ai-avatar {
+    font-size: 1.5rem;
+    margin-right: 6px;
+    animation: avatarPop 0.4s cubic-bezier(0.4, 0.8, 0.2, 1.2);
+    user-select: none;
   }
   
   .bubble-text {
@@ -48,4 +58,9 @@
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  
+
+  @keyframes avatarPop {
+    0% { transform: scale(0.7); opacity: 0; }
+    70% { transform: scale(1.15); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+  }

@@ -5,8 +5,18 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background-color: #f0f2f5;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
   font-family: Arial, sans-serif;
+  transition: background 0.5s;
+}
+
+@media (max-width: 900px) {
+  .app > div {
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: center !important;
+  }
 }
 
 h1 {
