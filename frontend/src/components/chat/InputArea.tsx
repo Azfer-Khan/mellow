@@ -27,7 +27,7 @@ const InputArea: React.FC<InputAreaProps> = ({ onSend }) => {
       <input
         type="text"
         value={inputText}
-        placeholder="Type your message..."
+        placeholder="Share anything on your mind..."
         onChange={(e) => setInputText(e.target.value)}
         onKeyPress={handleKeyPress}
       />

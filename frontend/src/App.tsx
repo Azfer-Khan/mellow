@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import ChatContainer from './components/chat/ChatContainer';
 import ThemeToggle from './components/context/ThemeToggle';
+import MoodJournal from './components/journal/MoodJournal';
 import './App.css';
 
 const App: React.FC = () => {
@@ -14,7 +15,10 @@ const App: React.FC = () => {
   return (
     <div className="app">
       <ThemeToggle />
-      <ChatContainer />
+      <div style={{ display: 'flex', flexDirection: 'row', gap: 32, alignItems: 'flex-start', justifyContent: 'center', width: '100%' }}>
+        <ChatContainer />
+        <MoodJournal />
+      </div>
     </div>
   );
 };

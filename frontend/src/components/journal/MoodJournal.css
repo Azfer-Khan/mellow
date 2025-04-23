@@ -1,0 +1,113 @@
+/* src/components/journal/MoodJournal.css */
+.mood-journal {
+  background: var(--header-bg);
+  border-radius: 20px;
+  box-shadow: 0 4px 24px var(--shadow-color);
+  padding: 24px 20px;
+  margin: 24px 0;
+  max-width: 400px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  animation: fadeInJournal 0.7s cubic-bezier(0.4, 0.8, 0.2, 1.2);
+  min-width: 260px;
+}
+
+@keyframes fadeInJournal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.mood-journal h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+  text-align: center;
+  font-weight: 600;
+}
+
+.mood-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.mood-form input,
+.mood-form textarea {
+  border: 2px solid var(--input-border);
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  background: var(--input-bg);
+  color: var(--input-text);
+  resize: none;
+  transition: border-color 0.2s;
+}
+
+.mood-form input:focus,
+.mood-form textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.mood-form button {
+  background: linear-gradient(135deg, var(--primary-color), #1a6eeb);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 0;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mood-form button:hover {
+  background: linear-gradient(135deg, #1a6eeb, var(--primary-color));
+}
+
+.mood-entries {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.mood-entries li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--input-border);
+  display: flex;
+  flex-direction: column;
+  font-size: 0.98rem;
+}
+
+.mood-entries li:hover {
+  background: rgba(43,127,255,0.07);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.mood-label {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.mood-note {
+  color: var(--secondary-text);
+  margin-left: 4px;
+}
+
+.mood-time {
+  font-size: 0.8rem;
+  color: #888;
+  margin-top: 2px;
+}
+
+.mood-error {
+  color: #d32f2f;
+  margin-top: 8px;
+  text-align: center;
+}

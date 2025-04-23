@@ -1,3 +1,19 @@
+# Assignment Submission: Mood Journal & Conversational Memory
+
+## What I Built
+I implemented a Mood Journal feature and a conversational memory system for the MellowMind AI therapy app. The Mood Journal enables users to log their daily moods and reflections, view recent entries, and build self-awareness—all within a minimal, comforting UI. The chat system now includes short-term memory, passing the last five conversation turns to the AI microservice, resulting in more context-aware and empathetic responses.
+
+## Why I Chose This Approach
+I chose this direction because journaling is a proven, evidence-based tool for mental health, and conversational memory is essential for creating supportive, human-like AI interactions. By focusing on these two features, I aimed to deliver immediate user value while demonstrating thoughtful product sense and clean, modular engineering. This approach also lays a strong foundation for future personalization and deeper engagement.
+
+## Future Extensions
+This work can be extended in several impactful ways:
+1. Adding mood analytics and visualizations to help users track trends and progress over time.
+2. Enabling secure cloud sync and multi-device support for persistent, portable journaling.
+3. Expanding the AI’s memory window and integrating retrieval-augmented generation (RAG) for richer, more informed conversations.
+4. Incorporating emotion classification to further personalize the chatbot’s tone and suggestions.
+5. Integrating with professional support resources or providing crisis intervention pathways for users in need.
+
 # MellowMind.ai
 
 An AI-powered therapy chat application designed to provide compassionate support for users with anxiety. This project uses a modular architecture with a Node.js/TypeScript backend, a Python microservice for AI tasks, and an Electron/React desktop frontend. It is designed to allow hotswapping of AI models and includes robust local data storage (SQLite) with future potential for RAG and knowledge graph integration.

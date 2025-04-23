@@ -15,6 +15,9 @@ interface MessageBubbleProps {
 const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
   return (
     <div className={`message-bubble ${message.sender}`}>
+      {message.sender === 'ai' && (
+        <span className="ai-avatar" title="Mellow AI">🧠</span>
+      )}
       <div className="bubble-text">{message.text}</div>
       {message.timestamp && (
         <div className="bubble-timestamp">{message.timestamp}</div>
