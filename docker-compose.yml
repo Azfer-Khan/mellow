@@ -9,6 +9,8 @@ services:
       - "80:80"
     depends_on:
       - node-backend
+    networks:
+      - mellow-network
     restart: unless-stopped
 
   node-backend:
@@ -24,6 +26,8 @@ services:
     environment:
       - PYTHON_AI_URL=http://python-ai:8000
       - DB_PATH=/app/data/chat.db
+    networks:
+      - mellow-network
     restart: unless-stopped
 
   python-ai:
@@ -32,7 +36,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    networks:
+      - mellow-network
     restart: unless-stopped
+
+networks:
+  mellow-network:
+    driver: bridge
 
 volumes:
   node-db-data: 

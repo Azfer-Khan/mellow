@@ -17,7 +17,13 @@ const dbPath = process.env.DB_PATH || './data/chat.db';
 
 // Configure CORS
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost:3001'], // Allow both React dev server and Electron
+  origin: [
+    'http://localhost:3000', 
+    'http://localhost:3001', 
+    'http://frontend', 
+    'http://localhost:80', 
+    'http://frontend:80'
+  ], // Allow React dev server, Electron, and Docker frontend
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type']
 }));
