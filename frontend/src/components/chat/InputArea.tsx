@@ -1,5 +1,5 @@
 // src/components/chat/InputArea.tsx
-import React, { useState } from 'react';
+import React, { useState, KeyboardEvent } from 'react';
 import './InputArea.css';
 
 interface InputAreaProps {
@@ -16,8 +16,9 @@ const InputArea: React.FC<InputAreaProps> = ({ onSend }) => {
     }
   };
 
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleSend();
     }
   };
@@ -29,7 +30,8 @@ const InputArea: React.FC<InputAreaProps> = ({ onSend }) => {
         value={inputText}
         placeholder="Type your message..."
         onChange={(e) => setInputText(e.target.value)}
-        onKeyPress={handleKeyPress}
+        onKeyDown={handleKeyPress}
+        autoFocus
       />
       <button onClick={handleSend}>Send</button>
     </div>

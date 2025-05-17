@@ -12,6 +12,13 @@
     margin: 20px;
     position: relative;
 }
+
+/* Specific styling for Electron app */
+.chat-container.electron-app {
+    border-radius: 10px;
+    height: calc(100vh - 20px);
+    margin: 10px;
+}
   
 .chat-header {
   padding: 24px 32px;
