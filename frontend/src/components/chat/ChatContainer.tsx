@@ -19,8 +19,8 @@ const ChatContainer: React.FC = () => {
     setIsTyping(true);
 
     try {
-      // Replace the simulated response with an API call
-      const response = await axios.post('http://localhost:3000/chat', { message: text });
+      // Use relative path to leverage nginx proxy in production or direct API in development
+      const response = await axios.post('/api/chat', { message: text });
       const aiResponseText = response.data.response;
 
       const aiMessage: Message = {
