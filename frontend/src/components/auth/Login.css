@@ -18,9 +18,9 @@
   box-sizing: border-box;
 }
 
-h2 {
+.login-card h2 {
   margin: 0 0 8px 0;
-  color: var(--primary-text, #333);
+  color: var(--primary-heading, #333);
   font-size: 24px;
   font-weight: 600;
   text-align: center;
@@ -134,6 +134,7 @@ form {
 /* Dark mode support using CSS variables */
 [data-theme="dark"] .login-card {
   --card-bg: #2d2d2d;
+  --primary-heading: #f5f5f5;
   --primary-text: #f5f5f5;
   --secondary-text: #b0b0b0;
   --label-color: #d0d0d0;
@@ -143,4 +144,19 @@ form {
   --link-color: #7ab8ff;
   --primary-color: #4a90e2;
   --primary-color-hover: #5da0f2;
+}
+
+/* Light mode explicit variables */
+[data-theme="light"] .login-card, .login-card {
+  --primary-heading: #333;
+  --primary-text: #333;
+  --secondary-text: #666;
+  --label-color: #555;
+  --card-bg: white;
+  --input-border: #ddd;
+  --input-bg: #fff;
+  --input-text: #333;
+  --link-color: #4a90e2;
+  --primary-color: #4a90e2;
+  --primary-color-hover: #3a80d2;
 } 
