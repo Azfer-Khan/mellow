@@ -1,3 +1,12 @@
+# PRODUCTION DOCKERFILE
+# This Dockerfile is used for production deployment
+# For development with hot reloading, use Dockerfile.dev instead
+# Key differences:
+# - Uses multi-stage build
+# - Builds static files
+# - Serves via Nginx
+# - No hot reloading
+
 # Stage 1: Build the React application
 FROM node:20-alpine as build
 
