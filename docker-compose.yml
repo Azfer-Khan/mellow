@@ -1,6 +1,28 @@
 version: '3.8'
 
 services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: mellow_db
+      POSTGRES_USER: mellow_user
+      POSTGRES_PASSWORD: mellow_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    networks:
+      - mellow-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mellow_user -d mellow_db"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
   frontend:
     build:
       context: ./frontend
@@ -19,13 +41,19 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
-    volumes:
-      - node-db-data:/app/data
     depends_on:
-      - python-ai
+      postgres:
+        condition: service_healthy
+      python-ai:
+        condition: service_started
     environment:
       - PYTHON_AI_URL=http://python-ai:8000
-      - DB_PATH=/app/data/chat.db
+      - DB_TYPE=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=mellow_db
+      - DB_USER=mellow_user
+      - DB_PASSWORD=mellow_password
     networks:
       - mellow-network
     restart: unless-stopped
@@ -36,6 +64,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=mellow_db
+      - DB_USER=mellow_user
+      - DB_PASSWORD=mellow_password
     networks:
       - mellow-network
     restart: unless-stopped
@@ -45,4 +82,4 @@ networks:
     driver: bridge
 
 volumes:
-  node-db-data: 
+  postgres-data: 
