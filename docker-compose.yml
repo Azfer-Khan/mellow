@@ -1,16 +1,27 @@
 version: '3.8'
 
+# DEVELOPMENT CONFIGURATION
+# For production, use docker-compose.prod.yml instead
+# Key differences in dev:
+# - Uses Dockerfile.dev for frontend
+# - Mounts volumes for hot reloading
+# - Uses port 3000 for React dev server
 services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
-      - "80:80"
+      - "80:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
     depends_on:
       - node-backend
     networks:
       - mellow-network
+    environment:
+      - CHOKIDAR_USEPOLLING=true
     restart: unless-stopped
 
   node-backend:
