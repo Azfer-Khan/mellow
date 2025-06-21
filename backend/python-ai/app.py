@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from database import get_db, test_connection, Conversation
@@ -6,6 +7,27 @@ import os
 from typing import List, Optional
 
 app = FastAPI(title="Mellow AI Service", version="1.0.0")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",     # React dev server
+        "http://localhost:3001",     # Alternative React dev server
+        "http://localhost:80",       # Docker frontend on port 80
+        "http://localhost",          # Docker frontend without port
+        "http://frontend",           # Docker service name
+        "http://frontend:3000",      # Docker frontend service
+        "http://frontend:80",        # Docker frontend on port 80
+        "http://127.0.0.1:3000",     # Local IP
+        "http://127.0.0.1:80",       # Local IP on port 80
+        "http://127.0.0.1",          # Local IP without port
+        "http://node-backend:3000",  # Node backend service
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Pydantic models
 class ChatRequest(BaseModel):

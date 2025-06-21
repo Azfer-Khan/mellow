@@ -46,6 +46,25 @@
   -webkit-text-fill-color: transparent;
 }
 
+.logout-button {
+  background-color: transparent;
+  border: 1px solid var(--primary-color, #4a90e2);
+  color: var(--primary-color, #4a90e2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: absolute;
+  right: 32px;
+}
+
+.logout-button:hover {
+  background-color: var(--primary-color, #4a90e2);
+  color: white;
+}
+
 /* Add a subtle pattern overlay */
 .chat-container::before {
   content: '';

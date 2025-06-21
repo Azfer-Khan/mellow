@@ -34,14 +34,21 @@ const dbConfig = {
 // Configure CORS
 app.use(cors({
   origin: [
-    'http://localhost:3000', 
-    'http://localhost:3001', 
-    'http://frontend', 
-    'http://localhost:80', 
-    'http://frontend:80'
-  ], // Allow React dev server, Electron, and Docker frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+    'http://localhost:3000',     // React dev server
+    'http://localhost:3001',     // Alternative React dev server
+    'http://localhost:80',       // Docker frontend on port 80
+    'http://localhost',          // Docker frontend without port
+    'http://frontend',           // Docker service name
+    'http://frontend:3000',      // Docker frontend service
+    'http://frontend:80',        // Docker frontend on port 80
+    'http://127.0.0.1:3000',     // Local IP
+    'http://127.0.0.1:80',       // Local IP on port 80
+    'http://127.0.0.1',          // Local IP without port
+    // Add any other origins you might need
+  ], 
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 }));
 
 // Middleware to parse JSON bodies

@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 import './Login.css';
+import config from '../../config';
 
 interface LoginFormData {
-  email: string;
+  username: string;
   password: string;
 }
 
-const Login: React.FC = () => {
+interface LoginProps {
+  onNavigateToRegister: () => void;
+  onLoginSuccess: () => void;
+}
+
+const Login: React.FC<LoginProps> = ({ onNavigateToRegister, onLoginSuccess }) => {
   const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
+    username: '',
     password: ''
   });
   
   const [error, setError] = useState<string>('');
+  const [success, setSuccess] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -22,22 +30,55 @@ const Login: React.FC = () => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Basic validation
-    if (!formData.email || !formData.password) {
-      setError('Please enter both email and password');
+    if (!formData.username || !formData.password) {
+      setError('Please enter both username and password');
       return;
     }
     
-    // Clear any previous errors
     setError('');
+    setSuccess('');
+    setIsLoading(true);
     
-    // For now, just log the submission (no actual API call)
-    console.log('Login attempted with:', formData);
-    
-    // You can add API integration here later
+    try {
+      const response = await fetch(`${config.apiUrl}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          password: formData.password
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess('Login successful!');
+        
+        // Store token and user data
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+        }
+        
+        // Navigate to chat after successful login
+        setTimeout(() => {
+          onLoginSuccess();
+        }, 1000);
+      } else {
+        setError(data.error || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      setError('Network error. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -46,17 +87,18 @@ const Login: React.FC = () => {
         <h2>Sign in to continue</h2>
         
         {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
         
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="username">Username</label>
             <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
               onChange={handleInputChange}
-              placeholder="Enter your email"
+              placeholder="Enter your username"
               required
             />
           </div>
@@ -78,11 +120,13 @@ const Login: React.FC = () => {
             <a href="#">Forgot password?</a>
           </div>
           
-          <button type="submit" className="login-button">Sign In</button>
+          <button type="submit" className="login-button" disabled={isLoading}>
+            {isLoading ? 'Signing In...' : 'Sign In'}
+          </button>
         </form>
         
         <div className="register-link">
-          Don't have an account? <a href="#">Sign up</a>
+          Don't have an account? <button type="button" className="link-button" onClick={onNavigateToRegister}>Sign up</button>
         </div>
       </div>
     </div>
