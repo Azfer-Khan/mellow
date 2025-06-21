@@ -44,6 +44,7 @@ services:
       - mellow-network
     environment:
       - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_IN_DOCKER=true
     restart: unless-stopped
 
   node-backend:
