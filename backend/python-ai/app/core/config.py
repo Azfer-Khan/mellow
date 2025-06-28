@@ -4,6 +4,10 @@ Configuration settings for Mellow AI Service
 
 import os
 from typing import Optional
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 class Settings:
     """Application settings loaded from environment variables"""
@@ -23,6 +27,12 @@ class Settings:
     # Server settings
     HOST: str = os.getenv('HOST', '0.0.0.0')
     PORT: int = int(os.getenv('PORT', '8000'))
+    
+    # Gemini AI settings
+    GEMINI_API_KEY: Optional[str] = os.getenv('GEMINI_API_KEY')
+    GEMINI_MODEL: str = os.getenv('GEMINI_MODEL', 'gemini-2.0-flash')
+    GEMINI_MAX_TOKENS: int = int(os.getenv('GEMINI_MAX_TOKENS', '8000'))
+    GEMINI_TEMPERATURE: float = float(os.getenv('GEMINI_TEMPERATURE', '0.7'))
     
     @property
     def database_url(self) -> str:
