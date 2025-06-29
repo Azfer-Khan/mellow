@@ -65,6 +65,40 @@
   color: white;
 }
 
+/* Loading and error states */
+.loading-history, .history-error {
+  padding: 16px 32px;
+  text-align: center;
+  font-size: 14px;
+  border-bottom: 1px solid var(--input-border, #e0e0e0);
+}
+
+.loading-history {
+  background-color: var(--secondary-bg, #f8f9fa);
+  color: var(--text-secondary, #666);
+}
+
+.loading-history p {
+  margin: 0;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.history-error {
+  background-color: #fdf2f8;
+  color: #be185d;
+  border-left: 4px solid #ec4899;
+}
+
+.history-error p {
+  margin: 0;
+  font-weight: 500;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
 /* Add a subtle pattern overlay */
 .chat-container::before {
   content: '';

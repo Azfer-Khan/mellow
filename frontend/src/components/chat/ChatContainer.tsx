@@ -5,6 +5,7 @@ import MessageList from './MessageList';
 import InputArea from './InputArea';
 import TypingIndicator from './TypingIndicator';
 import { Message } from './MessageBubble';
+import { ConversationService, ConversationHistory } from '../../services/conversationService';
 import config from '../../config';
 import './ChatContainer.css';
 
@@ -16,6 +17,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onLogout }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isTyping, setIsTyping] = useState<boolean>(false);
   const [isElectron, setIsElectron] = useState<boolean>(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState<boolean>(true);
+  const [historyError, setHistoryError] = useState<string | null>(null);
 
   // Check if running in Electron
   useEffect(() => {
@@ -25,9 +28,71 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onLogout }) => {
     }
   }, []);
 
+  // Convert conversation history to message format
+  const convertHistoryToMessages = (conversations: ConversationHistory[]): Message[] => {
+    const messages: Message[] = [];
+    // Sort conversations by timestamp (oldest first)
+    const sortedConversations = [...conversations].sort((a, b) => 
+      new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+    );
+
+    sortedConversations.forEach(conversation => {
+      // Add user message
+      messages.push({
+        sender: 'user',
+        text: conversation.user_message,
+        timestamp: conversation.timestamp,
+        conversationId: conversation.id,
+        isHistorical: true
+      });
+
+      // Add AI response
+      messages.push({
+        sender: 'ai',
+        text: conversation.ai_response,
+        timestamp: conversation.timestamp,
+        conversationId: conversation.id,
+        isHistorical: true
+      });
+    });
+
+    return messages;
+  };
+
+  // Load conversation history on component mount
+  useEffect(() => {
+    const loadConversationHistory = async () => {
+      try {
+        setIsLoadingHistory(true);
+        setHistoryError(null);
+        
+        const history = await ConversationService.fetchConversationHistory();
+        const historyMessages = convertHistoryToMessages(history);
+        setMessages(historyMessages);
+      } catch (error: any) {
+        console.error('Failed to load conversation history:', error);
+        setHistoryError(error.message);
+        
+        // If authentication failed, trigger logout
+        if (error.message.includes('Authentication failed') && onLogout) {
+          setTimeout(() => onLogout(), 2000);
+        }
+      } finally {
+        setIsLoadingHistory(false);
+      }
+    };
+
+    loadConversationHistory();
+  }, [onLogout]);
+
   const sendMessage = async (text: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    const userMessage: Message = { sender: 'user', text, timestamp };
+    const userMessage: Message = { 
+      sender: 'user', 
+      text, 
+      timestamp,
+      isHistorical: false
+    };
     setMessages(prev => [...prev, userMessage]);
 
     setIsTyping(true);
@@ -57,6 +122,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onLogout }) => {
         sender: 'ai',
         text: aiResponseText,
         timestamp: new Date().toLocaleTimeString(),
+        conversationId: response.data.conversation_id,
+        isHistorical: false
       };
       setMessages(prev => [...prev, aiMessage]);
     } catch (error: any) {
@@ -84,6 +151,7 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onLogout }) => {
         sender: 'ai',
         text: errorMessage,
         timestamp: new Date().toLocaleTimeString(),
+        isHistorical: false
       };
       setMessages(prev => [...prev, errorMessageObj]);
     } finally {
@@ -101,6 +169,19 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onLogout }) => {
           </button>
         )}
       </div>
+      
+      {isLoadingHistory && (
+        <div className="loading-history">
+          <p>Loading conversation history...</p>
+        </div>
+      )}
+      
+      {historyError && (
+        <div className="history-error">
+          <p>⚠️ {historyError}</p>
+        </div>
+      )}
+      
       <MessageList messages={messages} />
       <TypingIndicator isTyping={isTyping} />
       <InputArea onSend={sendMessage} />
