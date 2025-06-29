@@ -2,9 +2,14 @@
 AI response generation service for Mellow AI Service
 """
 
+import logging
 from typing import List
 from app.models.database import Conversation
 from app.utils.text_processing import detect_message_intent
+from app.services.gemini_service import gemini_service
+
+# Configure logging
+logger = logging.getLogger(__name__)
 
 class AIService:
     """Service for generating AI responses to user messages"""
@@ -12,7 +17,7 @@ class AIService:
     @staticmethod
     def generate_contextual_response(user_message: str, recent_conversations: List[Conversation]) -> str:
         """
-        Generate a more intelligent response based on user input and conversation history
+        Generate a response using Gemini AI with fallback to static responses
         
         Args:
             user_message: The user's input message
@@ -20,6 +25,35 @@ class AIService:
             
         Returns:
             Generated AI response string
+        """
+        # Try to generate response using Gemini first
+        if gemini_service.is_available():
+            try:
+                gemini_response = gemini_service.generate_response(user_message, recent_conversations)
+                if gemini_response:
+                    print("Using Gemini-generated response")
+                    return gemini_response
+                else:
+                    print("Gemini returned empty response, falling back to static responses")
+            except Exception as e:
+                print(f"Error with Gemini service: {str(e)}, falling back to static responses")
+        else:
+            print("Gemini service not available, using static responses")
+        
+        # Fallback to static responses
+        return AIService._generate_static_response(user_message, recent_conversations)
+    
+    @staticmethod
+    def _generate_static_response(user_message: str, recent_conversations: List[Conversation]) -> str:
+        """
+        Generate a static response based on user input and conversation history (fallback method)
+        
+        Args:
+            user_message: The user's input message
+            recent_conversations: List of recent conversation objects for context
+            
+        Returns:
+            Generated static response string
         """
         # Analyze the message for intent and emotions
         intent = detect_message_intent(user_message)
