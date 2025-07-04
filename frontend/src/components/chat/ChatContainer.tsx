@@ -66,7 +66,8 @@ const ChatContainer: React.FC<ChatContainerProps> = ({ onLogout }) => {
         setIsLoadingHistory(true);
         setHistoryError(null);
         
-        const history = await ConversationService.fetchConversationHistory();
+        // Use getUserConversations for user-specific history
+        const history = await ConversationService.getUserConversations(50);
         const historyMessages = convertHistoryToMessages(history);
         setMessages(historyMessages);
       } catch (error: any) {

@@ -26,10 +26,30 @@ export class ConversationService {
     };
   }
 
+  // Get user-specific conversation history (recommended for regular users)
+  static async getUserConversations(limit?: number): Promise<ConversationHistory[]> {
+    try {
+      const url = `${config.apiUrl}/chat/conversations/my${limit ? `?limit=${limit}` : ''}`;
+      const response = await axios.get<ConversationsResponse>(url, {
+        headers: this.getAuthHeaders()
+      });
+      return response.data.conversations;
+    } catch (error: any) {
+      console.error('Error fetching user conversations:', error);
+      if (error.response?.status === 401) {
+        throw new Error('Authentication failed. Please log in again.');
+      } else if (error.response?.status === 403) {
+        throw new Error('You don\'t have permission to view conversations.');
+      }
+      throw new Error('Failed to fetch user conversations');
+    }
+  }
+
+  // Get all conversations (admin-level access required)
   static async fetchConversationHistory(): Promise<ConversationHistory[]> {
     try {
       const response = await axios.get<ConversationsResponse>(
-        `${config.apiUrl}/conversations`,
+        `${config.apiUrl}/chat/conversations`,
         {
           headers: this.getAuthHeaders()
         }
@@ -40,7 +60,7 @@ export class ConversationService {
       if (error.response?.status === 401) {
         throw new Error('Authentication failed. Please log in again.');
       } else if (error.response?.status === 403) {
-        throw new Error('You don\'t have permission to view conversation history.');
+        throw new Error('You don\'t have permission to view all conversation history.');
       }
       throw new Error('Failed to fetch conversation history');
     }
