@@ -24,4 +24,30 @@
   font-size: 1.1rem;
   margin-bottom: 1rem;
 }
+
+/* Conversation divider styling */
+.conversation-divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.conversation-divider::before,
+.conversation-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--input-border, #e0e0e0), transparent);
+}
+
+.conversation-divider span {
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary, #666);
+  background-color: var(--bg-color, white);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
   

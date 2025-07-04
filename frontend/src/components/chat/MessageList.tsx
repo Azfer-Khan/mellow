@@ -44,9 +44,30 @@ const MessageList: React.FC<MessageListProps> = ({ messages }) => {
           <p>No messages yet. Start a conversation!</p>
         </div>
       ) : (
-        messages.map((msg, index) => (
-          <MessageBubble key={index} message={msg} />
-        ))
+        <>
+          {/* Add a divider if there are historical messages and current session messages */}
+          {messages.some(msg => msg.isHistorical) && messages.some(msg => !msg.isHistorical) && (
+            <div className="conversation-divider">
+              <span>Current Session</span>
+            </div>
+          )}
+          {messages.map((msg, index) => {
+            // Add a divider before the first current session message
+            const isFirstCurrentMessage = !msg.isHistorical && 
+              index > 0 && messages[index - 1].isHistorical;
+            
+            return (
+              <React.Fragment key={index}>
+                {isFirstCurrentMessage && (
+                  <div className="conversation-divider">
+                    <span>Current Session</span>
+                  </div>
+                )}
+                <MessageBubble message={msg} />
+              </React.Fragment>
+            );
+          })}
+        </>
       )}
       <div ref={messagesEndRef} />
     </div>

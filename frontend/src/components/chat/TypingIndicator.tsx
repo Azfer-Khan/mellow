@@ -10,7 +10,7 @@ const TypingIndicator: React.FC<TypingIndicatorProps> = ({ isTyping }) => {
   if (!isTyping) return null;
   return (
     <div className="typing-indicator">
-      <span>AI is typing...</span>
+      <span>Mellow is typing...</span>
     </div>
   );
 };

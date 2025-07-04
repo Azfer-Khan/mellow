@@ -43,6 +43,31 @@
   .message-bubble:hover .bubble-timestamp {
     opacity: 0.7;
   }
+
+  /* Historical message styling */
+  .message-bubble.historical {
+    opacity: 0.8;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .message-bubble.historical.user {
+    background-color: var(--primary-light, #6ba3f5);
+  }
+
+  .message-bubble.historical.ai {
+    background-color: var(--secondary-light, #f8f9fa);
+    border-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .message-bubble.historical .bubble-timestamp {
+    opacity: 0.6;
+    font-size: 0.65rem;
+    color: var(--text-muted, #666);
+  }
+
+  .message-bubble.historical:hover .bubble-timestamp {
+    opacity: 0.8;
+  }
   
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
