@@ -1,44 +1,11 @@
 import { Pool } from 'pg';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
+import { User, CreateUserRequest, UserPermission } from '../types/user';
+import { LoginRequest, AuthRequest, TokenPayload } from '../types/auth';
+import { config } from '../config/environment';
 
-// Types for user management
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  first_name?: string;
-  last_name?: string;
-  role: 'admin' | 'user' | 'moderator';
-  is_active: boolean;
-  is_verified: boolean;
-  last_login?: Date;
-  created_at: Date;
-  updated_at: Date;
-}
-
-export interface CreateUserRequest {
-  username: string;
-  email: string;
-  password: string;
-  first_name?: string;
-  last_name?: string;
-  role?: 'admin' | 'user' | 'moderator';
-}
-
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-export interface AuthRequest extends Request {
-  user?: User;
-}
-
-// JWT secret from environment or default (change in production!)
-const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-key-change-in-production';
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
+// JWT configuration from centralized config
 
 export class UserService {
   private pool: Pool;
@@ -60,19 +27,19 @@ export class UserService {
 
   // Generate JWT token
   generateToken(user: User): string {
-    const payload = {
+    const payload: TokenPayload = {
       id: user.id,
       username: user.username,
       email: user.email,
       role: user.role
     };
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN } as jwt.SignOptions);
+    return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn } as jwt.SignOptions);
   }
 
   // Verify JWT token
   verifyToken(token: string): any {
     try {
-      return jwt.verify(token, JWT_SECRET);
+      return jwt.verify(token, config.jwt.secret);
     } catch (error) {
       throw new Error('Invalid token');
     }
@@ -306,72 +273,4 @@ export class UserService {
       client.release();
     }
   }
-}
-
-// Middleware to authenticate JWT token
-export const authenticateToken = (userService: UserService) => {
-  return async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
-
-    if (!token) {
-      res.status(401).json({ error: 'Access token required' });
-      return;
-    }
-
-    try {
-      const decoded = userService.verifyToken(token);
-      const user = await userService.getUserById(decoded.id);
-      
-      if (!user || !user.is_active) {
-        res.status(401).json({ error: 'Invalid or inactive user' });
-        return;
-      }
-
-      req.user = user;
-      next();
-    } catch (error) {
-      res.status(403).json({ error: 'Invalid token' });
-      return;
-    }
-  };
-};
-
-// Middleware to check user permissions
-export const requirePermission = (permission: string, userService: UserService) => {
-  return async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
-    if (!req.user) {
-      res.status(401).json({ error: 'Authentication required' });
-      return;
-    }
-
-    try {
-      const hasPermission = await userService.checkUserPermission(req.user.id, permission);
-      
-      if (!hasPermission) {
-        res.status(403).json({ error: 'Insufficient permissions' });
-        return;
-      }
-
-      next();
-    } catch (error) {
-      res.status(500).json({ error: 'Permission check failed' });
-      return;
-    }
-  };
-};
-
-// Middleware to check if user is admin
-export const requireAdmin = async (req: AuthRequest, res: Response, next: NextFunction): Promise<void> => {
-  if (!req.user) {
-    res.status(401).json({ error: 'Authentication required' });
-    return;
-  }
-
-  if (req.user.role !== 'admin') {
-    res.status(403).json({ error: 'Admin access required' });
-    return;
-  }
-
-  next();
-}; 
+} 
