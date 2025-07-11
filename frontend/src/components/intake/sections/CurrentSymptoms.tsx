@@ -10,6 +10,7 @@ interface CurrentSymptomsProps {
   onUpdate: (data: Partial<CurrentSymptomsData>) => void;
   onNext: () => void;
   onPrevious: () => void;
+  onSaveProgress?: () => void;
 }
 
 const SYMPTOM_CATEGORIES = {
@@ -79,7 +80,8 @@ const CurrentSymptoms: React.FC<CurrentSymptomsProps> = ({
   data,
   onUpdate,
   onNext,
-  onPrevious
+  onPrevious,
+  onSaveProgress
 }) => {
   const [formData, setFormData] = useState<CurrentSymptomsData>(data);
 
@@ -107,7 +109,11 @@ const CurrentSymptoms: React.FC<CurrentSymptomsProps> = ({
   };
 
   const handleSaveAndContinue = () => {
-    onUpdate(formData);
+    if (onSaveProgress) {
+      onSaveProgress();
+    } else {
+      onUpdate(formData);
+    }
   };
 
   const selectedCount = formData.current_symptoms?.length || 0;

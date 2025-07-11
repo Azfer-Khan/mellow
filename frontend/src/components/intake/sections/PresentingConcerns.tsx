@@ -13,6 +13,7 @@ interface PresentingConcernsProps {
   onUpdate: (data: Partial<PresentingConcernsData>) => void;
   onNext: () => void;
   onPrevious: () => void;
+  onSaveProgress?: () => void;
 }
 
 const DURATION_OPTIONS = [
@@ -55,7 +56,8 @@ const PresentingConcerns: React.FC<PresentingConcernsProps> = ({
   data,
   onUpdate,
   onNext,
-  onPrevious
+  onPrevious,
+  onSaveProgress
 }) => {
   const [formData, setFormData] = useState<PresentingConcernsData>(data);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -126,7 +128,11 @@ const PresentingConcerns: React.FC<PresentingConcernsProps> = ({
   };
 
   const handleSaveAndContinue = () => {
-    onUpdate(formData);
+    if (onSaveProgress) {
+      onSaveProgress();
+    } else {
+      onUpdate(formData);
+    }
   };
 
   const isGoalSelected = (goal: string) => {

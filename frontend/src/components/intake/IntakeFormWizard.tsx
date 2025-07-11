@@ -156,14 +156,19 @@ const IntakeFormWizard: React.FC<IntakeFormWizardProps> = ({ onComplete, onCance
         if (existingData.intake) {
           setFormData(existingData.intake);
           setIntakeId(existingData.intake.id);
+          console.log('Found existing intake form:', existingData.intake.id);
           // If form is already complete, redirect
-          if (existingData.intake.is_complete) {
+          if (existingData.intake_form.is_complete) {
             onComplete();
             return;
           }
+        } else {
+          console.error('No intake form in response:', existingData);
+          // setError('Invalid response from server');
         }
       } else if (checkResponse.status === 404) {
         // No existing intake form, create a new one
+        console.log('No existing intake form found, creating new one...');
         const startResponse = await fetch(`${config.apiUrl}/intake/start`, {
           method: 'POST',
           headers: {
@@ -175,11 +180,16 @@ const IntakeFormWizard: React.FC<IntakeFormWizardProps> = ({ onComplete, onCance
         if (startResponse.ok) {
           const newIntake = await startResponse.json();
           setIntakeId(newIntake.intake.id);
+          console.log('Created new intake form:', newIntake.intake.id);
         } else {
-          setError('Failed to initialize intake form');
+          const errorData = await startResponse.json().catch(() => ({ error: 'Unknown error' }));
+          console.error('Failed to create intake form:', errorData);
+          setError(errorData.error || 'Failed to initialize intake form');
         }
       } else {
-        setError('Failed to check intake status');
+        const errorData = await checkResponse.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Failed to check intake status:', errorData);
+        setError(errorData.error || 'Failed to check intake status');
       }
     } catch (error) {
       console.error('Error initializing intake form:', error);
@@ -188,12 +198,20 @@ const IntakeFormWizard: React.FC<IntakeFormWizardProps> = ({ onComplete, onCance
   };
 
   const saveProgress = async (updatedData: Partial<IntakeFormData>) => {
-    if (!intakeId) return;
+    if (!intakeId) {
+      console.error('No intake ID available for saving');
+      return;
+    }
 
     setIsSaving(true);
     try {
       const token = localStorage.getItem('token');
-      await fetch(`${config.apiUrl}/intake`, {
+      if (!token) {
+        setError('Authentication required');
+        return;
+      }
+
+      const response = await fetch(`${config.apiUrl}/intake`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -201,14 +219,27 @@ const IntakeFormWizard: React.FC<IntakeFormWizardProps> = ({ onComplete, onCance
         },
         body: JSON.stringify(updatedData),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('Error saving progress:', errorData);
+        setError(errorData.error || `Failed to save progress (${response.status})`);
+        return;
+      }
+
+      // Success - clear any previous errors
+      setError('');
+      console.log('Progress saved successfully');
     } catch (error) {
       console.error('Error saving progress:', error);
+      setError('Network error while saving. Please try again.');
     } finally {
       setIsSaving(false);
     }
   };
 
   const updateFormData = async (stepData: Partial<IntakeFormData>) => {
+    console.log('Updating form data:', stepData);
     const updatedData = { ...formData, ...stepData };
     setFormData(updatedData);
     await saveProgress(stepData);
@@ -260,12 +291,39 @@ const IntakeFormWizard: React.FC<IntakeFormWizardProps> = ({ onComplete, onCance
     }
   };
 
+  const handleSaveAndExit = async () => {
+    console.log('Saving and exiting with current form data:', formData);
+    
+    try {
+      // Save current form data before exiting
+      await saveProgress(formData);
+      
+      // Show success message briefly
+      setError('');
+      console.log('Progress saved successfully before exit');
+      
+      // Exit the form
+      if (onCancel) {
+        onCancel();
+      }
+    } catch (error) {
+      console.error('Error saving before exit:', error);
+      setError('Failed to save progress. Please try again.');
+    }
+  };
+
+  const saveCurrentProgress = async () => {
+    console.log('Saving current progress with complete form data:', formData);
+    await saveProgress(formData);
+  };
+
   const renderCurrentStep = () => {
     const stepProps = {
       data: formData,
       onUpdate: updateFormData,
       onNext: goToNextStep,
       onPrevious: goToPreviousStep,
+      onSaveProgress: saveCurrentProgress,
     };
 
     switch (currentStep) {
@@ -329,7 +387,7 @@ const IntakeFormWizard: React.FC<IntakeFormWizardProps> = ({ onComplete, onCance
           <button 
             type="button" 
             className="cancel-button" 
-            onClick={onCancel}
+            onClick={handleSaveAndExit}
             disabled={isLoading}
           >
             Save & Exit

@@ -5,9 +5,10 @@ interface PsychosocialSnapshotProps {
   onUpdate: (data: any) => void;
   onNext: () => void;
   onPrevious: () => void;
+  onSaveProgress?: () => void;
 }
 
-const PsychosocialSnapshot: React.FC<PsychosocialSnapshotProps> = ({ data, onUpdate, onNext, onPrevious }) => {
+const PsychosocialSnapshot: React.FC<PsychosocialSnapshotProps> = ({ data, onUpdate, onNext, onPrevious, onSaveProgress }) => {
   const [formData, setFormData] = useState(data);
 
   const handleNext = () => {
@@ -31,7 +32,7 @@ const PsychosocialSnapshot: React.FC<PsychosocialSnapshotProps> = ({ data, onUpd
           Previous: Substance Use
         </button>
         <div className="nav-buttons-right">
-          <button type="button" className="nav-button secondary" onClick={() => onUpdate(formData)}>
+          <button type="button" className="nav-button secondary" onClick={() => onSaveProgress ? onSaveProgress() : onUpdate(formData)}>
             Save & Continue Later
           </button>
           <button type="button" className="nav-button primary" onClick={handleNext}>

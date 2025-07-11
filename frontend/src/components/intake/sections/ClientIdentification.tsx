@@ -19,6 +19,7 @@ interface ClientIdentificationProps {
   onUpdate: (data: Partial<ClientIdentificationData>) => void;
   onNext: () => void;
   onPrevious?: () => void;
+  onSaveProgress?: () => void;
 }
 
 const GENDER_OPTIONS = [
@@ -62,7 +63,8 @@ const ClientIdentification: React.FC<ClientIdentificationProps> = ({
   data,
   onUpdate,
   onNext,
-  onPrevious
+  onPrevious,
+  onSaveProgress
 }) => {
   const [formData, setFormData] = useState<ClientIdentificationData>(data);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -117,7 +119,11 @@ const ClientIdentification: React.FC<ClientIdentificationProps> = ({
 
   const handleSaveAndContinue = () => {
     // Save current data even if validation fails
-    onUpdate(formData);
+    if (onSaveProgress) {
+      onSaveProgress();
+    } else {
+      onUpdate(formData);
+    }
   };
 
   return (

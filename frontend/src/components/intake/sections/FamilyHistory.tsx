@@ -13,13 +13,15 @@ interface FamilyHistoryProps {
   onUpdate: (data: Partial<FamilyHistoryData>) => void;
   onNext: () => void;
   onPrevious: () => void;
+  onSaveProgress?: () => void;
 }
 
 const FamilyHistory: React.FC<FamilyHistoryProps> = ({
   data,
   onUpdate,
   onNext,
-  onPrevious
+  onPrevious,
+  onSaveProgress
 }) => {
   const [formData, setFormData] = useState<FamilyHistoryData>(data);
 
@@ -34,7 +36,11 @@ const FamilyHistory: React.FC<FamilyHistoryProps> = ({
   };
 
   const handleSaveAndContinue = () => {
-    onUpdate(formData);
+    if (onSaveProgress) {
+      onSaveProgress();
+    } else {
+      onUpdate(formData);
+    }
   };
 
   return (

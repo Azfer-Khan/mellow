@@ -14,13 +14,15 @@ interface MedicalHistoryProps {
   onUpdate: (data: Partial<MedicalHistoryData>) => void;
   onNext: () => void;
   onPrevious: () => void;
+  onSaveProgress?: () => void;
 }
 
 const MedicalHistory: React.FC<MedicalHistoryProps> = ({
   data,
   onUpdate,
   onNext,
-  onPrevious
+  onPrevious,
+  onSaveProgress
 }) => {
   const [formData, setFormData] = useState<MedicalHistoryData>(data);
 
@@ -35,7 +37,11 @@ const MedicalHistory: React.FC<MedicalHistoryProps> = ({
   };
 
   const handleSaveAndContinue = () => {
-    onUpdate(formData);
+    if (onSaveProgress) {
+      onSaveProgress();
+    } else {
+      onUpdate(formData);
+    }
   };
 
   return (

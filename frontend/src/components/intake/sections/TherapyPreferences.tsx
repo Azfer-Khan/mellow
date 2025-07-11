@@ -3,17 +3,21 @@ import React, { useState } from 'react';
 interface TherapyPreferencesProps {
   data: any;
   onUpdate: (data: any) => void;
+  onNext: () => void;
   onPrevious: () => void;
   onComplete: () => void;
-  isCompleting?: boolean;
+  isCompleting: boolean;
+  onSaveProgress?: () => void;
 }
 
 const TherapyPreferences: React.FC<TherapyPreferencesProps> = ({ 
   data, 
   onUpdate, 
+  onNext, 
   onPrevious, 
   onComplete, 
-  isCompleting 
+  isCompleting,
+  onSaveProgress 
 }) => {
   const [formData, setFormData] = useState(data);
 
@@ -71,7 +75,7 @@ const TherapyPreferences: React.FC<TherapyPreferencesProps> = ({
           <button 
             type="button" 
             className="nav-button secondary"
-            onClick={() => onUpdate(formData)}
+            onClick={() => onSaveProgress ? onSaveProgress() : onUpdate(formData)}
             disabled={isCompleting}
           >
             Save & Continue Later

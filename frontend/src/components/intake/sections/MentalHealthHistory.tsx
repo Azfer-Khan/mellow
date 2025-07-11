@@ -22,13 +22,15 @@ interface MentalHealthHistoryProps {
   onUpdate: (data: Partial<MentalHealthHistoryData>) => void;
   onNext: () => void;
   onPrevious: () => void;
+  onSaveProgress?: () => void;
 }
 
 const MentalHealthHistory: React.FC<MentalHealthHistoryProps> = ({
   data,
   onUpdate,
   onNext,
-  onPrevious
+  onPrevious,
+  onSaveProgress
 }) => {
   const [formData, setFormData] = useState<MentalHealthHistoryData>(data);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -71,7 +73,11 @@ const MentalHealthHistory: React.FC<MentalHealthHistoryProps> = ({
   };
 
   const handleSaveAndContinue = () => {
-    onUpdate(formData);
+    if (onSaveProgress) {
+      onSaveProgress();
+    } else {
+      onUpdate(formData);
+    }
   };
 
   return (
