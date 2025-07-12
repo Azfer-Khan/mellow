@@ -153,12 +153,14 @@ const IntakeFormWizard: React.FC<IntakeFormWizardProps> = ({ onComplete, onCance
 
       if (checkResponse.ok) {
         const existingData = await checkResponse.json();
-        if (existingData.intake) {
-          setFormData(existingData.intake);
-          setIntakeId(existingData.intake.id);
-          console.log('Found existing intake form:', existingData.intake.id);
+        // Support both 'intake_form' and 'intake' keys for compatibility
+        const intakeObj = existingData.intake_form || existingData.intake;
+        if (intakeObj) {
+          setFormData(intakeObj);
+          setIntakeId(intakeObj.id);
+          console.log('Found existing intake form:', intakeObj.id);
           // If form is already complete, redirect
-          if (existingData.intake_form.is_complete) {
+          if (intakeObj.is_complete || (existingData.intake_form && existingData.intake_form.is_complete) || (existingData.intake && existingData.intake.is_complete)) {
             onComplete();
             return;
           }
@@ -179,8 +181,16 @@ const IntakeFormWizard: React.FC<IntakeFormWizardProps> = ({ onComplete, onCance
 
         if (startResponse.ok) {
           const newIntake = await startResponse.json();
-          setIntakeId(newIntake.intake.id);
-          console.log('Created new intake form:', newIntake.intake.id);
+          // Support both 'intake_form' and 'intake' keys for compatibility
+          const intakeObj = newIntake.intake_form || newIntake.intake;
+          if (intakeObj) {
+            setIntakeId(intakeObj.id);
+            setFormData(intakeObj);
+            console.log('Created new intake form:', intakeObj.id);
+          } else {
+            console.error('No intake form in response:', newIntake);
+            setError('Failed to initialize intake form (missing intake ID)');
+          }
         } else {
           const errorData = await startResponse.json().catch(() => ({ error: 'Unknown error' }));
           console.error('Failed to create intake form:', errorData);
