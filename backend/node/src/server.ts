@@ -48,6 +48,12 @@ const startServer = async (): Promise<void> => {
       logger.info('GET /chat/conversations - Get all conversations (admin)');
       logger.info('GET /chat/conversations/my - Get user conversations');
       logger.info('GET /health - Health check');
+      logger.info('POST /intake/start - Initialize intake form');
+      logger.info('GET /intake - Get current user intake form');
+      logger.info('PUT /intake - Update intake form');
+      logger.info('POST /intake/complete - Complete intake form');
+      logger.info('GET /intake/progress - Get intake progress');
+      logger.info('GET /intake/status - Check intake status');
       logger.info('========================');
     });
   } catch (error) {
