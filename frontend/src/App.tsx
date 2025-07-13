@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import ChatContainer from './components/chat/ChatContainer';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
+import IntakeFormWizard from './components/intake/IntakeFormWizard';
 import ThemeToggle from './components/context/ThemeToggle';
+import config from './config';
 import './App.css';
 
-type AppView = 'login' | 'register' | 'chat';
+type AppView = 'login' | 'register' | 'intake' | 'chat';
 
 const App: React.FC = () => {
   const [currentView, setCurrentView] = useState<AppView>('login');
@@ -21,9 +23,35 @@ const App: React.FC = () => {
     const token = localStorage.getItem('token');
     if (token) {
       setIsLoggedIn(true);
-      setCurrentView('chat');
+      checkIntakeStatus();
     }
   }, []);
+
+  const checkIntakeStatus = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${config.apiUrl}/auth/intake-status`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.needs_intake) {
+          setCurrentView('intake');
+        } else {
+          setCurrentView('chat');
+        }
+      } else {
+        setCurrentView('chat'); // Default to chat if we can't check status
+      }
+    } catch (error) {
+      console.error('Error checking intake status:', error);
+      setCurrentView('chat'); // Default to chat on error
+    }
+  };
 
   const handleNavigateToRegister = () => {
     setCurrentView('register');
@@ -35,6 +63,14 @@ const App: React.FC = () => {
 
   const handleLoginSuccess = () => {
     setIsLoggedIn(true);
+    checkIntakeStatus();
+  };
+
+  const handleIntakeComplete = () => {
+    setCurrentView('chat');
+  };
+
+  const handleIntakeExit = () => {
     setCurrentView('chat');
   };
 
@@ -46,8 +82,20 @@ const App: React.FC = () => {
   };
 
   const renderCurrentView = () => {
-    if (isLoggedIn && currentView === 'chat') {
-      return <ChatContainer onLogout={handleLogout} />;
+    if (isLoggedIn) {
+      switch (currentView) {
+        case 'intake':
+          return (
+            <IntakeFormWizard 
+              onComplete={handleIntakeComplete}
+              onCancel={handleIntakeExit}
+            />
+          );
+        case 'chat':
+          return <ChatContainer onLogout={handleLogout} />;
+        default:
+          return <ChatContainer onLogout={handleLogout} />;
+      }
     }
     
     switch (currentView) {
