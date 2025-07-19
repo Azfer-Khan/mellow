@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../SectionStyles.css';
 
 interface MedicalHistoryData {
@@ -25,6 +25,11 @@ const MedicalHistory: React.FC<MedicalHistoryProps> = ({
   onSaveProgress
 }) => {
   const [formData, setFormData] = useState<MedicalHistoryData>(data);
+
+  // Update local state when data prop changes (for auto-fill)
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
 
   const handleInputChange = (field: keyof MedicalHistoryData, value: string | boolean) => {
     const newData = { ...formData, [field]: value };

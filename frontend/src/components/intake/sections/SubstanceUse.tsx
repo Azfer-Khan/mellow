@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface SubstanceUseProps {
   data: any;
@@ -10,6 +10,11 @@ interface SubstanceUseProps {
 
 const SubstanceUse: React.FC<SubstanceUseProps> = ({ data, onUpdate, onNext, onPrevious, onSaveProgress }) => {
   const [formData, setFormData] = useState(data);
+
+  // Update local state when data prop changes (for auto-fill)
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
 
   const handleNext = () => {
     onUpdate(formData);

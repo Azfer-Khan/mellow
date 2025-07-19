@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../SectionStyles.css';
 
 interface FamilyHistoryData {
@@ -24,6 +24,11 @@ const FamilyHistory: React.FC<FamilyHistoryProps> = ({
   onSaveProgress
 }) => {
   const [formData, setFormData] = useState<FamilyHistoryData>(data);
+
+  // Update local state when data prop changes (for auto-fill)
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
 
   const handleInputChange = (field: keyof FamilyHistoryData, value: string) => {
     const newData = { ...formData, [field]: value };

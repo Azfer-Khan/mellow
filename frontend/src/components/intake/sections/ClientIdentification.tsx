@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../SectionStyles.css';
 
 interface ClientIdentificationData {
@@ -68,6 +68,32 @@ const ClientIdentification: React.FC<ClientIdentificationProps> = ({
 }) => {
   const [formData, setFormData] = useState<ClientIdentificationData>(data);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Update local state when data prop changes (for auto-fill)
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
+
+  // Helper function to convert ISO date string to YYYY-MM-DD format for date input
+  const formatDateForInput = (dateString?: string): string => {
+    if (!dateString) return '';
+    
+    try {
+      // Handle ISO date strings like "1993-10-25T00:00:00.000Z"
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return '';
+      
+      // Convert to YYYY-MM-DD format
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}`;
+    } catch (error) {
+      console.error('Error formatting date:', error);
+      return '';
+    }
+  };
 
   const handleInputChange = (field: keyof ClientIdentificationData, value: string) => {
     const newData = { ...formData, [field]: value };
@@ -189,7 +215,7 @@ const ClientIdentification: React.FC<ClientIdentificationProps> = ({
             <input
               type="date"
               id="date_of_birth"
-              value={formData.date_of_birth || ''}
+              value={formatDateForInput(formData.date_of_birth)}
               onChange={(e) => handleInputChange('date_of_birth', e.target.value)}
               className={errors.date_of_birth ? 'error' : ''}
             />
