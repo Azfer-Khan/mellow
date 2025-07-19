@@ -276,6 +276,41 @@
   border-radius: 6px;
 }
 
+/* Dynamic Tooltip Styles */
+.slider-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.dynamic-tooltip {
+  position: absolute;
+  top: -40px;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--primary-color, #2B7FFF), var(--primary-hover, #1d4ed8));
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(43, 127, 255, 0.3);
+  transition: all 0.3s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.dynamic-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--primary-color, #2B7FFF);
+}
+
 /* Warning and Info Boxes */
 .warning-box {
   background: #fef5e7;
@@ -512,6 +547,12 @@
 
   .scale-input .scale-labels {
     justify-content: space-around;
+  }
+
+  .dynamic-tooltip {
+    font-size: 0.8rem;
+    padding: 6px 10px;
+    top: -35px;
   }
 }
 

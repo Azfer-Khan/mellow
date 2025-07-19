@@ -147,24 +147,35 @@ const MentalHealthHistory: React.FC<MentalHealthHistoryProps> = ({
               </label>
               <div className="scale-input">
                 <span>Not helpful</span>
-                <input
-                  type="range"
-                  id="prior_counselling_helpful"
-                  min="1"
-                  max="5"
-                  value={formData.prior_counselling_helpful || 3}
-                  onChange={(e) => handleInputChange('prior_counselling_helpful', parseInt(e.target.value))}
-                />
+                <div className="slider-container">
+                  <input
+                    type="range"
+                    id="prior_counselling_helpful"
+                    min="1"
+                    max="5"
+                    value={formData.prior_counselling_helpful || 3}
+                    onChange={(e) => handleInputChange('prior_counselling_helpful', parseInt(e.target.value))}
+                  />
+                  <div className="dynamic-tooltip" style={{
+                    left: `${((formData.prior_counselling_helpful || 3) - 1) * 25}%`
+                  }}>
+                    {(() => {
+                      const value = formData.prior_counselling_helpful || 3;
+                      const labels = {
+                        1: 'Not helpful',
+                        2: 'Somewhat helpful', 
+                        3: 'Neutral',
+                        4: 'Helpful',
+                        5: 'Very helpful'
+                      };
+                      return labels[value as keyof typeof labels];
+                    })()}
+                  </div>
+                </div>
                 <span>Very helpful</span>
                 <div className="scale-value">{formData.prior_counselling_helpful || 3}</div>
               </div>
-              <div className="scale-labels">
-                <span>1</span>
-                <span>2</span>
-                <span>3</span>
-                <span>4</span>
-                <span>5</span>
-              </div>
+
             </div>
 
             <div className="form-group">
