@@ -129,7 +129,9 @@ export class IntakeService {
       addField('main_issues', updates.main_issues);
       addField('concern_duration', updates.concern_duration);
       addField('current_severity', updates.current_severity);
-      addField('therapy_goals', updates.therapy_goals ? JSON.stringify(updates.therapy_goals) : undefined);
+      // For PostgreSQL arrays, we need to pass the array directly without JSON.stringify
+      // If therapy_goals is provided, ensure it's an array, otherwise pass undefined
+      addField('therapy_goals', updates.therapy_goals && Array.isArray(updates.therapy_goals) ? updates.therapy_goals : undefined);
 
       // Section 3: Mental Health History
       addField('prior_counselling', updates.prior_counselling);
