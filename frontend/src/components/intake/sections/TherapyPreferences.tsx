@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface TherapyPreferencesProps {
   data: any;
@@ -20,6 +20,11 @@ const TherapyPreferences: React.FC<TherapyPreferencesProps> = ({
   onSaveProgress 
 }) => {
   const [formData, setFormData] = useState(data);
+
+  // Update local state when data prop changes (for auto-fill)
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
 
   const handleComplete = () => {
     onUpdate(formData);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../SectionStyles.css';
 
 interface CurrentSymptomsData {
@@ -84,6 +84,11 @@ const CurrentSymptoms: React.FC<CurrentSymptomsProps> = ({
   onSaveProgress
 }) => {
   const [formData, setFormData] = useState<CurrentSymptomsData>(data);
+
+  // Update local state when data prop changes (for auto-fill)
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
 
   const handleSymptomToggle = (symptom: string, checked: boolean) => {
     const currentSymptoms = formData.current_symptoms || [];

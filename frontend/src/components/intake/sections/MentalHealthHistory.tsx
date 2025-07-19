@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../SectionStyles.css';
 
 interface MentalHealthHistoryData {
@@ -34,6 +34,11 @@ const MentalHealthHistory: React.FC<MentalHealthHistoryProps> = ({
 }) => {
   const [formData, setFormData] = useState<MentalHealthHistoryData>(data);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Update local state when data prop changes (for auto-fill)
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
 
   const handleInputChange = (field: keyof MentalHealthHistoryData, value: string | number | boolean) => {
     const newData = { ...formData, [field]: value };
